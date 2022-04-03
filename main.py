@@ -29,28 +29,29 @@ class ToastThread(threading.Thread):
         print("Exiting Thread")
 
 
-def do(example_sent):
-    send_notification(example_sent)
-    if move_mouse:
-        move_mouse()
-
-
 def move_mouse():
     try:
         pyautogui.moveTo(100, 100, duration=1)
         pyautogui.moveRel(0, 50, duration=1)
+
     except pyautogui.FailSafeException:
         print("Paused by the user")
 
 
-def send_notification(example_sent):
-    notif = ToastThread(example_sent)
+def send_notification(example):
+    notif = ToastThread(example)
     notif.start()
-    notif.join()
+
+
+def do(example, move):
+    send_notification(example)
+    if move:
+        move_mouse()
 
 
 def sigint_handler(signal, frame):
     print('KeyboardInterrupt is caught')
+    print('Bye now')
     sys.exit(0)
 
 
@@ -58,15 +59,26 @@ signal.signal(signal.SIGINT, sigint_handler)
 
 if __name__ == "__main__":
 
-    minutes = int(input("How often to receive a notification? [In minutes]: "))
-    sch.every(minutes).minutes.do(send_notification)
     move_mouse = False
     example_sent = False
+
+    minutes = int(input("How often to receive a notification? [In minutes]: "))
+    ans_list_positive = ["y", "Y"]
+    ans_list_negative = ["n", "N"]
+
+    answer = input("Do you want to move the mouse? y/n")
+    while answer not in ans_list_positive and answer not in ans_list_negative:
+        answer = input("Enter y/n only...  ")
+
+    if answer in ans_list_positive:
+        move_mouse = True
+
+    sch.every(minutes).minutes.do(send_notification)
 
     while True:
         if example_sent:
             sch.run_pending()
             time.sleep(1)
         else:
-            send_notification(example_sent)
+            do(example_sent, move_mouse)
             example_sent = True
