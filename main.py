@@ -8,9 +8,9 @@ import pyautogui
 
 
 class ToastThread(threading.Thread):
-    def __init__(self, example_sent):
+    def __init__(self, example):
         threading.Thread.__init__(self)
-        self.example = example_sent
+        self.example = example
 
     def run(self):
         toast = Notification
@@ -29,24 +29,16 @@ class ToastThread(threading.Thread):
         print("Exiting Thread")
 
 
-def move_mouse():
-    try:
-        pyautogui.moveTo(100, 100, duration=1)
-        pyautogui.moveRel(0, 50, duration=1)
-
-    except pyautogui.FailSafeException:
-        print("Paused by the user")
-
-
 def send_notification(example):
     notif = ToastThread(example)
     notif.start()
 
 
-def do(example, move):
+def wrapper_start(example, move):
     send_notification(example)
     if move:
-        move_mouse()
+        pyautogui.moveTo(100, 100, duration=1)
+        pyautogui.moveRel(0, 50, duration=1)
 
 
 def sigint_handler(signal, frame):
@@ -80,5 +72,5 @@ if __name__ == "__main__":
             sch.run_pending()
             time.sleep(1)
         else:
-            do(example_sent, move_mouse)
+            wrapper_start(example_sent, move_mouse)
             example_sent = True
