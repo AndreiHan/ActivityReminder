@@ -48,7 +48,7 @@ signal.signal(signal.SIGINT, sigint_handler)
 class ToastMenu:
     def __init__(self):
         self.minutes = get_minutes()
-        # self.move_mouse = get_mouse()
+        self.move_mouse = get_mouse()
         self.example_sent = False
         self.notif_sent = -1
 
