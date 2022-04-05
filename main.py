@@ -30,7 +30,7 @@ class ToastThread(threading.Thread):
                                  msg="This is how the notification will look",
                                  icon=os.getcwd() + "\\reminder.png")
 
-        toast.show()
+        print("Sent notification at: " + str(time.strftime("%H:%M:%S", time.localtime())))
         print("Exiting Thread")
 
 
