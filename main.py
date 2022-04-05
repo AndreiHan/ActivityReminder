@@ -1,8 +1,6 @@
 import threading
 import time
 import schedule as sch
-from winotify import Notification
-import os
 import signal
 import sys
 import pyautogui
@@ -14,9 +12,12 @@ class ToastThread(threading.Thread):
         self.example = True
 
     def run(self):
+        from winotify import Notification
         toast = Notification
         print("Starting Thread")
+        import os
         if self.example:
+
             toast = Notification(app_id="Reminder",
                                  title="Send a new email",
                                  msg="10 Minutes have passed!",
@@ -47,7 +48,21 @@ def wrapper_start(example, move):
         pyautogui.moveRel(0, 50, duration=1)
 
 
-def sigint_handler(signal, frame):
+def get_mouse():
+    ans_list_positive = ["y", "Y"]
+    ans_list_negative = ["n", "N"]
+
+    answer = input("Do you want to move the mouse? y/n")
+    while answer not in ans_list_positive and answer not in ans_list_negative:
+        answer = input("Enter y/n only...  ")
+
+    if answer in ans_list_positive:
+        return True
+    return False
+
+
+# noinspection PyUnusedLocal
+def sigint_handler(sig, fra):
     print('KeyboardInterrupt is caught')
     print('Bye now')
     sys.exit(0)
@@ -57,19 +72,10 @@ signal.signal(signal.SIGINT, sigint_handler)
 
 if __name__ == "__main__":
 
-    move_mouse = False
     example_sent = False
 
     minutes = int(input("How often to receive a notification? [In minutes]: "))
-    ans_list_positive = ["y", "Y"]
-    ans_list_negative = ["n", "N"]
-
-    answer = input("Do you want to move the mouse? y/n")
-    while answer not in ans_list_positive and answer not in ans_list_negative:
-        answer = input("Enter y/n only...  ")
-
-    if answer in ans_list_positive:
-        move_mouse = True
+    move_mouse = get_mouse()
 
     sch.every(minutes).minutes.do(send_notification)
 
