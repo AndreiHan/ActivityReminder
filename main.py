@@ -4,7 +4,7 @@ import schedule as sch
 import signal
 import sys
 import pyautogui
-
+from winotify import Notification
 
 class ToastThread(threading.Thread):
     def __init__(self):
@@ -12,7 +12,6 @@ class ToastThread(threading.Thread):
         self.example = True
 
     def run(self):
-        from winotify import Notification
         toast = Notification
         print("Starting Thread")
         import os
@@ -29,7 +28,7 @@ class ToastThread(threading.Thread):
                                  title="Windows Toast Test",
                                  msg="This is how the notification will look",
                                  icon=os.getcwd() + "\\reminder.png")
-
+        toast.show()
         print("Sent notification at: " + str(time.strftime("%H:%M:%S", time.localtime())))
         print("Exiting Thread")
 
