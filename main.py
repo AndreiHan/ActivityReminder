@@ -5,37 +5,42 @@ from winotify import Notification
 import signal
 import sys
 import pyautogui
-
+import os
 
 class ToastThread(threading.Thread):
-    def __init__(self, example):
+    def __init__(self):
         threading.Thread.__init__(self)
-        self.example = example
+        self.example = True
 
     def run(self):
         toast = Notification
         print("Starting Thread")
         if self.example:
-            toast = Notification(app_id="windows app",
-                                 title="Winotify Test Toast",
-                                 msg="New Notification!",
-                                 icon=r"c:\path\to\icon.png")
-
+            toast = Notification(app_id="Reminder",
+                                 title="Send a new email",
+                                 msg="10 Minutes have passed!",
+                                 icon=os.getcwd() + "\\reminder.png")
+        
         if not self.example:
+            self.example = True
             toast = Notification(app_id="Reminder",
                                  title="Windows Toast Test",
-                                 msg="This is how the notification will look")
+                                 msg="This is how the notification will look",
+                                 icon=os.getcwd() + "\\reminder.png")
+            
         toast.show()
         print("Exiting Thread")
 
 
-def send_notification(example):
-    notif = ToastThread(example)
+def send_notification():
+    notif = ToastThread()
     notif.start()
 
 
 def wrapper_start(example, move):
-    send_notification(example)
+    notif = ToastThread()
+    notif.example = example
+    notif.start()
     if move:
         pyautogui.moveTo(100, 100, duration=1)
         pyautogui.moveRel(0, 50, duration=1)
