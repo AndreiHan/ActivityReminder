@@ -82,6 +82,7 @@ class ToastMenu:
                                  icon=icon_path)
         toast.show()
         print("Sent notification at: " + str(time.strftime("%H:%M:%S", time.localtime())))
+        print("This was notification nr: + self.notif_sent)
         del toast
         print("Exiting Thread")
 
