@@ -1,5 +1,6 @@
 import json
 import os
+import threading
 
 
 class Config:
@@ -17,7 +18,8 @@ class Config:
             print("\nCreated new configuration")
 
             self.print_config()
-            self.write_current_config_to_file()
+            write = threading.Thread(target=self.write_current_config_to_file, args=())
+            write.start()
         else:
             self.import_config_from_json()
 
@@ -59,6 +61,7 @@ class Config:
 
         with open(self.location, "w+") as outfile:
             json.dump(dictionary, outfile)
+            outfile.close()
 
     def get_config_from_file(self):
 
@@ -66,6 +69,7 @@ class Config:
             try:
                 with open(self.location) as f:
                     data = json.loads(f.read())
+                    f.close()
                     return data
             except ValueError:
                 data = {}
