@@ -12,12 +12,12 @@ class Config:
         self.create_new_config()
 
     def create_new_config(self):
+
         if self.is_create_new_config():
             self.import_config_from_user_input()
-            self.write_current_config_to_file()
-            print("\nCreated new configuration")
+            print("\nCreated a new configuration:")
 
-            self.print_config()
+            self.print_current_config()
             write = threading.Thread(target=self.write_current_config_to_file, args=())
             write.start()
         else:
@@ -31,7 +31,7 @@ class Config:
             return True
 
         print("This is your old config\n")
-        self.print_config()
+        self.print_json_config()
         answer = input("\nDo you want to use your old configuration? y/n: ")
         while answer not in ans_list_positive and answer not in ans_list_negative:
             answer = input("Please use y/n only: ")
@@ -41,7 +41,11 @@ class Config:
 
         return False
 
-    def print_config(self):
+    def print_current_config(self):
+        dictionary = {"minutes": self.minutes, "notif_nr": self.notif_nr, "move_mouse": self.move_mouse}
+        print(json.dumps(dictionary, sort_keys=False, indent=4))
+
+    def print_json_config(self):
         dictionary = self.get_config_from_file()
         print(json.dumps(dictionary, sort_keys=False, indent=4))
 
