@@ -8,6 +8,7 @@ from winotify import Notification
 import os
 from config import Config
 
+
 # noinspection PyUnusedLocal
 def sigint_handler(sig, fra):
     print('KeyboardInterrupt is caught')
@@ -27,14 +28,13 @@ class ToastMenu:
         self.example_sent = False
         self.notif_sent = -1
         del config
-        
+
     def notification_loop(self):
         self.send_notification()
         sch.every(self.minutes).minutes.do(self.send_notification)
         while True:
             sch.run_pending()
             time.sleep(1)
-            
 
     def send_notification(self):
         notif = threading.Thread(target=self.notification, args=())
@@ -60,12 +60,11 @@ class ToastMenu:
                                  title="Windows Toast Example",
                                  msg="This is how the notification will look in " + str(self.minutes) + " minutes.",
                                  icon=icon_path)
-                                 
+
         toast.show()
         print("Sent notification at: " + str(time.strftime("%H:%M:%S", time.localtime())))
         print("This was notification nr:" + str(self.notif_sent))
         del toast
-
 
     def move_mouse_now(self):
         if self.move_mouse:
