@@ -12,22 +12,22 @@ class Config:
     
     def create_new_config(self):
         if self.is_create_new_config():
-            self.get_json_config()
-        else:   
             self.get_user_config()
             self.write_user_config()
             print("\nCreated new configuration")
             self.print_config()
             self.write_user_config()
+        else:   
+            self.get_json_config()
         
     def is_create_new_config(self):
-        ans_list_positive = ["y", "Y"]
-        ans_list_negative = ["n", "N"]
-        if len(self.get_config()) == 0:
-            print(self.get_config())
-            print(bool(self.get_config()))
-            return True
-            
+        ans_list_negative = ["y", "Y"]
+        ans_list_positive = ["n", "N"]
+        
+        if not bool(self.get_config()):
+                return True
+
+        
         print("This is your old config\n")
         self.print_config()
         answer = input("\nDo you want to use your old configuration? y/n: ")
@@ -69,15 +69,17 @@ class Config:
 
 
     def get_config(self):
+        
         if os.path.isfile(self.location):
             try:
                 with open(self.location) as f:
                     data = json.loads(f.read())
                     return data
             except ValueError:
-                return dict()
+                data = {}
+                return data
                 
-            return dict()
+            return data
             
     def get_mouse(self):
         ans_list_positive = ["y", "Y"]
